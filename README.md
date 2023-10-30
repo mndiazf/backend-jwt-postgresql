@@ -2,15 +2,6 @@
 
 Aplicación robusta basada en **Spring Boot v3.1.5** que proporciona autenticación y registro de usuarios a través de JWT (JSON Web Tokens).
 
-## Índice
-- [Tecnologías Utilizadas](#tecnologías-utilizadas)
-- [Descripción](#descripción)
-- [Funcionalidades](#funcionalidades)
-- [Instalación y Uso](#instalación-y-uso)
-- [Tests](#tests)
-- [Licencia](#licencia)
-- [Contacto](#contacto)
-
 ## Tecnologías Utilizadas 🚀
 - **Spring Boot**: v3.1.5
 - **Base de datos**: PostgreSQL v16
@@ -27,7 +18,7 @@ Esta aplicación se diseñó para ofrecer una interfaz API segura y eficiente pa
 **Endpoint**: `/register`  
 **Método**: `POST`
 
-Payload esperado:
+JSON esperado:
 
 ```json
 {
@@ -37,3 +28,4 @@ Payload esperado:
     "lastname": "apellido",
     "country": "pais"
 }
+```
