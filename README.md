@@ -161,7 +161,7 @@ git clone https://github.com/mndiazf/backend-spring-boot-jwt-postgresql.git
 **Navegar al directorio del proyecto:**
 
 ```bash
-cd tuRepositorio
+cd backend-spring-boot-jwt-postgresql
 ```
 
 **Instalar las dependencias:**
