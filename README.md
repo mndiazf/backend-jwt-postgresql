@@ -155,7 +155,7 @@ Respuesta tras un login exitoso:
 **Clonar el repositorio:**
 
 ```bash
-git clone https://github.com/tuUsuario/tuRepositorio.git
+git clone https://github.com/mndiazf/backend-spring-boot-jwt-postgresql.git
 ```
 
 **Navegar al directorio del proyecto:**
