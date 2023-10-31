@@ -2,23 +2,15 @@
 
 Aplicación robusta basada en **Spring Boot v3.1.5** que proporciona autenticación y registro de usuarios a través de JWT (JSON Web Tokens).
 
-## Tecnologías Utilizadas 🚀
-- **Spring Boot**: v3.1.5
-- **Base de datos**: PostgreSQL v16
-- **Administrador de base de datos**: pgAdmin (versión: latest)
-
 ## Descripción 🔍
 
 Esta aplicación se diseñó para ofrecer una interfaz API segura y eficiente para la autenticación y registro de usuarios. Utilizando JWT, garantizamos que cada usuario reciba un token único tras la autenticación, proporcionando así una capa adicional de seguridad.
-
-# Mi Aplicación Spring Boot 🌱
-
-Aplicación desarrollada con **Spring Boot v3.1.5** que implementa un sistema robusto de autenticación y registro basado en JWT.
 
 ## 🚀 Tecnologías y Dependencias
 
 ### Tecnologías principales
 
+- **JDK 17**
 - **Spring Boot**: v3.1.5
 - **Base de datos**: PostgreSQL v16
 - **Administrador de base de datos**: pgAdmin (versión: latest)
