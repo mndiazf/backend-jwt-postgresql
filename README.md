@@ -4,7 +4,7 @@ Aplicación robusta basada en **Spring Boot v3.1.5** que proporciona autenticaci
 
 ## Descripción 🔍
 
-Esta aplicación se diseñó para ofrecer una interfaz API segura y eficiente para la autenticación y registro de usuarios. Utilizando JWT, garantizamos que cada usuario reciba un token único tras la autenticación, proporcionando así una capa adicional de seguridad.
+Esta aplicación se diseñó para ofrecer una interfaz API segura y eficiente para la autenticación y registro de usuarios. Utilizando JWT, garantizamos que cada usuario reciba un token único tras la autenticación, proporcionando así una capa adicional de seguridad. Además, para el manejo de la base de datos, se utiliza una imagen Docker de PostgreSQL.
 
 ## 🚀 Tecnologías y Dependencias
 
