@@ -14,6 +14,7 @@ Esta aplicación se diseñó para ofrecer una interfaz API segura y eficiente pa
 - **Spring Boot**: v3.1.5
 - **Base de datos**: PostgreSQL v16
 - **Administrador de base de datos**: pgAdmin (versión: latest)
+- **Docker**: V4.20
 
 ### Dependencias de Maven
 
