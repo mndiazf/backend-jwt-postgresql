@@ -183,3 +183,17 @@ Para probar los endpoints de la API con Postman:
 3. En la pestaña Body, elige raw y selecciona formato JSON (application/json).
 4. Ingresa el payload correspondiente.
 5. Haz clic en Send.
+
+## Desarrollador del Proyecto
+
+<table>
+    <tr>
+        <td><img src="https://github.com/mndiazf/insert-image-spring-boot/assets/110750463/79e9fe0e-a55c-4b68-9e86-2929d9e24683" width="100"></td>
+        <td>
+            <strong>Nombre:</strong> Manolo Diaz  :pencil2:<br>
+            <strong>Correo:</strong> mn.diaz.f@gmail.com  :envelope:<br>
+            <strong>LinkedIn:</strong> https://www.linkedin.com/in/manolo-diaz-fernandez-215567224/  :briefcase:<br>
+            <strong>GitHub:</strong> https://github.com/mndiazf  :octocat:
+        </td>
+    </tr>
+</table>
