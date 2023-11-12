@@ -1,10 +1,12 @@
 package com.backend.BackendJWT.Jwt;
 
+import com.backend.BackendJWT.Models.Auth.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -23,15 +25,30 @@ public class JwtService {
         return getToken(new HashMap<>(), user);
     }
 
-    private String getToken(Map<String,Object> extraClaims, UserDetails user) {
-        return Jwts
-            .builder()
-            .setClaims(extraClaims)
-            .setSubject(user.getUsername())
-            .setIssuedAt(new Date(System.currentTimeMillis()))
-            .setExpiration(new Date(System.currentTimeMillis()+1000*60*24))
-            .signWith(getKey(), SignatureAlgorithm.HS256)
-            .compact();
+
+
+    private String getToken(Map<String, Object> extraClaims, UserDetails user) {
+        // Asegúrate de que UserDetails sea tu implementación de User
+        User principal = (User) user;
+
+        Claims claims = Jwts.claims().setSubject(user.getUsername());
+
+        // Obtener el primer rol del usuario
+        String role = principal.getAuthorities().stream()
+                .findFirst()
+                .map(GrantedAuthority::getAuthority)
+                .orElse(null);
+
+        claims.put("id_user", principal.getId());
+        claims.put("roles", role);
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .addClaims(extraClaims)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis()+1000*60*24))
+                .signWith(getKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
 
     private Key getKey() {
