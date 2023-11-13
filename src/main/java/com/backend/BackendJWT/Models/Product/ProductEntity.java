@@ -37,10 +37,6 @@ public class ProductEntity {
     @NotBlank
     private String marca;
 
-    @Column(columnDefinition = "TEXT")
-    @Lob
-    private String imagenBase64;
-
     private int stock;
 
     private boolean oferta;

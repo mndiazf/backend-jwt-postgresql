@@ -25,20 +25,21 @@ public class ProductService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public ProductEntity saveProduct(ProductRequestDto createProductDTO, MultipartFile imagen) throws IOException {
 
-        String nombreFinalImagen = handleImage(imagen);
 
-        Set<CategoryEntity> categories = convertCategoryNamesToEntities(createProductDTO.getCategory());
+    public ProductEntity saveProduct(ProductRequestDto productRequestDto) throws IOException {
 
+        Set<CategoryEntity> categories = convertCategoryNamesToEntities(productRequestDto.getCategory());
+
+
+        // Crear el objeto ProductEntity
         ProductEntity productEntity = ProductEntity.builder()
-                .nombre(createProductDTO.getNombre())
-                .descripcion(createProductDTO.getDescripcion())
-                .marca(createProductDTO.getMarca())
-                .precio(createProductDTO.getPrecio())
-                .stock(createProductDTO.getStock())
-                .oferta(createProductDTO.isOferta())
-                .imagenBase64(nombreFinalImagen)
+                .nombre(productRequestDto.getNombre())
+                .descripcion(productRequestDto.getDescripcion())
+                .marca(productRequestDto.getMarca())
+                .precio(productRequestDto.getPrecio())
+                .stock(productRequestDto.getStock())
+                .oferta(productRequestDto.isOferta())
                 .category(categories)
                 .build();
 

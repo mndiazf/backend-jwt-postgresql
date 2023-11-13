@@ -21,7 +21,7 @@ public class ImageEntity {
 
     @Lob
     @Column(columnDefinition = "TEXT")
-    private String base64Data;  // Puedes almacenar la imagen en formato base64 o cambiar a otro enfoque
+    private String base64Data;
 
     @ManyToOne
     @JoinColumn(name = "product_id")

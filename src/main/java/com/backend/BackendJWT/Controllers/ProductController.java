@@ -20,10 +20,9 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping("/saveProduct")
-    public ResponseEntity<?> saveProduct(@Valid ProductRequestDto createProductDTO,
-                                         @RequestParam("file") MultipartFile imagen) throws IOException {
+    public ResponseEntity<?> saveProduct(@Valid ProductRequestDto createProductDTO) throws IOException {
 
-        ProductEntity savedProduct = productService.saveProduct(createProductDTO, imagen);
+        ProductEntity savedProduct = productService.saveProduct(createProductDTO);
 
         return ResponseEntity.ok(savedProduct);
     }
