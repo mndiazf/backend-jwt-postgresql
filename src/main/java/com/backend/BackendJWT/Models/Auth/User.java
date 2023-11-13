@@ -2,6 +2,7 @@ package com.backend.BackendJWT.Models.Auth;
 
 import com.backend.BackendJWT.Models.Auth.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,10 +25,16 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue
     Integer id;
+
+    @NotBlank
     String username;
+    @NotBlank
     String lastname;
+    @NotBlank
     String firstname;
+    @NotBlank
     String country;
+    @NotBlank
     String password;
     @Enumerated(EnumType.STRING)
     Role role;
