@@ -15,6 +15,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -35,14 +37,27 @@ public class AuthService {
     }
 
     public AuthResponse register(RegisterRequest request) {
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new UsernameAlreadyExistsException("Username '" + request.getUsername() + "' is already registered");
+        }
+
+        // Check for existing email (optional, uncomment if needed)
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new EmailAlreadyExistsException("Email '" + request.getEmail() + "' is already associated with an account");
+        }
         User user = User.builder()
             .username(request.getUsername())
             .password(passwordEncoder.encode( request.getPassword()))
             .firstname(request.getFirstname())
             .lastname(request.getLastname())
-            .country(request.getCountry())
+            .email(request.getEmail())
+            .phoneNumber(request.getPhoneNumber())
+            .phoneNumber2(Optional.ofNullable(request.getPhoneNumber2()).orElse(null))
             .role(Role.USER)
+
             .build();
+
+
 
         userRepository.save(user);
 
@@ -51,5 +66,16 @@ public class AuthService {
             .build();
         
     }
+    // Custom exception classes (create separate files for these)
+    public class UsernameAlreadyExistsException extends RuntimeException {
+        public UsernameAlreadyExistsException(String message) {
+            super(message);
+        }
+    }
 
+    public class EmailAlreadyExistsException extends RuntimeException {
+        public EmailAlreadyExistsException(String message) {
+            super(message);
+        }
+    }
 }
