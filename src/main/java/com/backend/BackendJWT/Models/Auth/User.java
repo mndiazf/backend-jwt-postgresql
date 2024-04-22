@@ -1,6 +1,5 @@
 package com.backend.BackendJWT.Models.Auth;
 
-import com.backend.BackendJWT.Models.Auth.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -31,13 +31,15 @@ public class User implements UserDetails {
     String password;
     String phoneNumber;
     String phoneNumber2;
-    @Enumerated(EnumType.STRING)
-    Role role;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id")
+    private Role role;  // Ensure there is no @Enumerated here as Role is an entity
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-      return List.of(new SimpleGrantedAuthority((role.name())));
+        return Collections.singletonList(new SimpleGrantedAuthority(role.getRoleName().name()));
     }
     @Override
     public boolean isAccountNonExpired() {

@@ -1,14 +1,12 @@
 package com.backend.BackendJWT.Services;
 
-import com.backend.BackendJWT.Models.Auth.AuthResponse;
-import com.backend.BackendJWT.Models.Auth.LoginRequest;
-import com.backend.BackendJWT.Models.Auth.RegisterRequest;
+import com.backend.BackendJWT.Models.Auth.*;
 import com.backend.BackendJWT.Jwt.JwtService;
-import com.backend.BackendJWT.Models.Auth.Role;
-import com.backend.BackendJWT.Models.Auth.User;
+import com.backend.BackendJWT.Repositories.RoleRepository;
 import com.backend.BackendJWT.Repositories.UserRepository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -27,6 +25,9 @@ public class AuthService {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     public AuthResponse login(LoginRequest request) {
         try {
@@ -57,31 +58,33 @@ public class AuthService {
             throw new UsernameAlreadyExistsException("Username '" + request.getUsername() + "' is already registered");
         }
 
-        // Check for existing email (optional, uncomment if needed)
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new EmailAlreadyExistsException("Email '" + request.getEmail() + "' is already associated with an account");
         }
+
+        // Fetch the default role
+        Role defaultRole = roleRepository.findByRoleName(ERole.USER)
+                .orElseThrow(() -> new RuntimeException("Default role not found"));
+
         User user = User.builder()
-            .username(request.getUsername())
-            .password(passwordEncoder.encode( request.getPassword()))
-            .firstname(request.getFirstname())
-            .lastname(request.getLastname())
-            .email(request.getEmail())
-            .phoneNumber(request.getPhoneNumber())
-            .phoneNumber2(Optional.ofNullable(request.getPhoneNumber2()).orElse(null))
-            .role(Role.USER)
+                .username(request.getUsername())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .firstname(request.getFirstname())
+                .lastname(request.getLastname())
+                .email(request.getEmail())
+                .phoneNumber(request.getPhoneNumber())
+                .phoneNumber2(request.getPhoneNumber2())  // Assuming phoneNumber2 can be directly passed.
+                .role(defaultRole)  // Set the fetched role
+                .build();
 
-            .build();
+        userRepository.save(user);  // Persist the new user with the role in the database.
 
-
-
-        userRepository.save(user);
-
+        // Generate token and return response
         return AuthResponse.builder()
-            .token(jwtService.getToken(user))
-            .build();
-        
+                .token(jwtService.getToken(user))
+                .build();
     }
+
     // Custom exception classes (create separate files for these)
     public class UsernameAlreadyExistsException extends RuntimeException {
         public UsernameAlreadyExistsException(String message) {
