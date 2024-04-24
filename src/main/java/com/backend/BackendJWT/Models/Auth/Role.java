@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -14,6 +16,8 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ERole roleName;  // Use ERole instead of an inner enum
 }
