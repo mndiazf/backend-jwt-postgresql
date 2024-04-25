@@ -1,4 +1,4 @@
-package com.backend.BackendJWT.Repositories;
+package com.backend.BackendJWT.Repositories.Auth;
 
 import com.backend.BackendJWT.Models.Auth.ERole;
 import com.backend.BackendJWT.Models.Auth.Role;

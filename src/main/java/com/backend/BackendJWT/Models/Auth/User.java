@@ -25,41 +25,42 @@ import java.util.List;
 @Table(name = "\"user\"")
 public class User implements UserDetails {
     @Id
-    @GeneratedValue
-    Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @NotNull
     @Size(min = 1, max = 30)
     @Column(nullable = false, length = 30)
-    String username;
+    private String username;
 
     @NotNull
     @Size(min = 1, max = 30)
     @Column(nullable = false, length = 30)
-    String lastname;
+    private String lastname;
 
     @NotNull
     @Size(min = 1, max = 30)
     @Column(nullable = false, length = 30)
-    String firstname;
+    private String firstname;
 
     @NotNull
     @Email
     @Size(min = 1, max = 255)
     @Column(nullable = false, length = 255)
-    String email;
+    private String email;
 
     @NotNull
     @Size(min = 8, max = 12)
     @Column(nullable = false, length = 12)
-    String password;
+    private String password;
 
     @NotNull
     @Size(min = 12, max = 12)
     @Column(nullable = false, length = 12)
-    String phoneNumber;
+    private String phoneNumber;
     @Size(min = 12, max = 12)
-    String phoneNumber2;
+    @Column(length = 12)
+    private String phoneNumber2;
 
 
     @ManyToOne(fetch = FetchType.EAGER)

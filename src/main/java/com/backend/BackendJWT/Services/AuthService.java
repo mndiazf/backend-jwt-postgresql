@@ -2,8 +2,8 @@ package com.backend.BackendJWT.Services;
 
 import com.backend.BackendJWT.Models.Auth.*;
 import com.backend.BackendJWT.Jwt.JwtService;
-import com.backend.BackendJWT.Repositories.RoleRepository;
-import com.backend.BackendJWT.Repositories.UserRepository;
+import com.backend.BackendJWT.Repositories.Auth.RoleRepository;
+import com.backend.BackendJWT.Repositories.Auth.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +14,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

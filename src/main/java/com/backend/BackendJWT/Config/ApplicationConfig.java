@@ -1,6 +1,6 @@
 package com.backend.BackendJWT.Config;
 
-import com.backend.BackendJWT.Repositories.UserRepository;
+import com.backend.BackendJWT.Repositories.Auth.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

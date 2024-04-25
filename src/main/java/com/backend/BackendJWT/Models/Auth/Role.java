@@ -18,6 +18,6 @@ public class Role {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 30)
     private ERole roleName;  // Use ERole instead of an inner enum
 }
