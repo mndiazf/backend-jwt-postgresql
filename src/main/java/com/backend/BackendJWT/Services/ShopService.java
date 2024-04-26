@@ -69,6 +69,7 @@ public class ShopService {
             producto.setStock(productoActualizado.getStock());
             producto.setDescripcion(productoActualizado.getDescripcion());
             producto.setDescuento(productoActualizado.getDescuento());
+            producto.setImgUrl(productoActualizado.getImgUrl());
             producto.setPorcentajeDescuento(productoActualizado.getPorcentajeDescuento());
 
             // Convertir y establecer la marca y categoría

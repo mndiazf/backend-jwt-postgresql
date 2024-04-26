@@ -33,6 +33,12 @@ public class Producto {
     private String descripcion;
 
     @NotNull
+    @Size(min = 1, max = 255)
+    @Column(nullable = false, length = 255)
+    private String imgUrl;
+
+
+    @NotNull
     @Column(nullable = false)
     private Boolean descuento;
 
