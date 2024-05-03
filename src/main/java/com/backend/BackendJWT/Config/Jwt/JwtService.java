@@ -1,4 +1,4 @@
-package com.backend.BackendJWT.Jwt;
+package com.backend.BackendJWT.Config.Jwt;
 
 import com.backend.BackendJWT.Models.Auth.User;
 import io.jsonwebtoken.Claims;

@@ -1,6 +1,6 @@
 package com.backend.BackendJWT.Config;
 
-import com.backend.BackendJWT.Jwt.JwtAuthenticationFilter;
+import com.backend.BackendJWT.Config.Jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +30,8 @@ public class SecurityConfig {
                         authRequest
                                 .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/shop/**").permitAll()
+                                .requestMatchers("/api/categorias/**").permitAll()
+                                .requestMatchers("/api/marcas/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManager ->

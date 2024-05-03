@@ -51,7 +51,7 @@ public class User implements UserDetails {
 
     @NotNull
     @Size(min = 8, max = 12)
-    @Column(nullable = false, length = 12)
+    @Column(nullable = false)
     private String password;
 
     @NotNull

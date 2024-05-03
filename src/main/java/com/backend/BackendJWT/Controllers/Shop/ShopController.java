@@ -1,10 +1,10 @@
-package com.backend.BackendJWT.Controllers;
+package com.backend.BackendJWT.Controllers.Shop;
 
 
 import com.backend.BackendJWT.Models.Shop.Categoria;
 import com.backend.BackendJWT.Models.Shop.Marca;
 import com.backend.BackendJWT.Models.Shop.Producto;
-import com.backend.BackendJWT.Services.ShopService;
+import com.backend.BackendJWT.Services.Shop.ShopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/shop/productos")
 public class ShopController {
 

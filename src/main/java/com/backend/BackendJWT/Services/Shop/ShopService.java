@@ -1,4 +1,4 @@
-package com.backend.BackendJWT.Services;
+package com.backend.BackendJWT.Services.Shop;
 
 import com.backend.BackendJWT.Models.Shop.Categoria;
 import com.backend.BackendJWT.Models.Shop.Marca;

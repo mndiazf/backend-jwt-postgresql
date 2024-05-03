@@ -1,7 +1,7 @@
 package com.backend.BackendJWT.Services;
 
 import com.backend.BackendJWT.Models.Auth.*;
-import com.backend.BackendJWT.Jwt.JwtService;
+import com.backend.BackendJWT.Config.Jwt.JwtService;
 import com.backend.BackendJWT.Repositories.Auth.RoleRepository;
 import com.backend.BackendJWT.Repositories.Auth.UserRepository;
 
