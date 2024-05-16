@@ -14,8 +14,8 @@ public class Producto {
     private Long idProducto;
 
     @NotNull
-    @Size(min = 1, max = 30)
-    @Column(nullable = false, length = 30)
+    @Size(min = 1, max = 120)
+    @Column(nullable = false, length = 120)
     private String nombre;
 
     @NotNull
@@ -28,8 +28,8 @@ public class Producto {
     private Integer stock;
 
     @NotNull
-    @Size(min = 1, max = 255)
-    @Column(nullable = false, length = 255)
+    @Size(min = 1, max = 1000)
+    @Column(nullable = false, length = 1000)
     private String descripcion;
 
     @NotNull
