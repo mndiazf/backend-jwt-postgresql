@@ -83,6 +83,16 @@ public class AuthService {
                 .build();
     }
 
+    // Método para actualizar la contraseña del usuario
+    public void updatePassword(RecoverPassword request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario con el email '" + request.getEmail() + "' no encontrado"));
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+    }
+
+
     // Custom exception classes (create separate files for these)
     public class UsernameAlreadyExistsException extends RuntimeException {
         public UsernameAlreadyExistsException(String message) {

@@ -32,6 +32,7 @@ public class SecurityConfig {
                                 .requestMatchers("/shop/**").permitAll()
                                 .requestMatchers("/api/categorias/**").permitAll()
                                 .requestMatchers("/api/marcas/**").permitAll()
+                                .requestMatchers("/email/send").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManager ->

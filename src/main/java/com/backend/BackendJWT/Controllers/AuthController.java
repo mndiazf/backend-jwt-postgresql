@@ -1,6 +1,7 @@
 package com.backend.BackendJWT.Controllers;
 
 import com.backend.BackendJWT.Models.Auth.AuthResponse;
+import com.backend.BackendJWT.Models.Auth.RecoverPassword;
 import com.backend.BackendJWT.Services.AuthService;
 import com.backend.BackendJWT.Models.Auth.LoginRequest;
 import com.backend.BackendJWT.Models.Auth.RegisterRequest;
@@ -26,5 +27,11 @@ public class AuthController {
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request)
     {
         return ResponseEntity.ok(authService.register(request));
+    }
+
+    @PostMapping("/update-password")
+    public ResponseEntity<?> updatePassword(@RequestBody RecoverPassword request) {
+        authService.updatePassword(request);
+        return ResponseEntity.ok("Password updated successfully");
     }
 }
