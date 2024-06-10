@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -31,25 +32,45 @@ public class CategoriaController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Categoria> updateCategoria(@PathVariable Long id, @RequestBody Categoria categoria) {
-        Categoria updatedCategoria = categoriaService.updateCategoria(id, categoria);
-        if (updatedCategoria == null) {
-            // Categoria not found with the provided ID. Return a 404 Not Found response.
-            return ResponseEntity.notFound().build();
-        } else {
+        try {
+            Categoria updatedCategoria = categoriaService.updateCategoria(id, categoria);
             return ResponseEntity.ok(updatedCategoria);
+        } catch (CategoriaNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoría no encontrada", e);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al actualizar la categoría", e);
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategoria(@PathVariable Long id) {
-        categoriaService.deleteCategoria(id);
-        return ResponseEntity.noContent().build(); // 204 No Content
+        try {
+            categoriaService.deleteCategoria(id);
+            return ResponseEntity.noContent().build(); // 204 No Content
+        } catch (CategoriaNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoría no encontrada", e);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al eliminar la categoría", e);
+        }
     }
 
     @GetMapping("/all")
     public ResponseEntity<List<Categoria>> getAllCategorias() {
-        List<Categoria> categorias = categoriaService.getAllCategorias();
-        return ResponseEntity.ok(categorias);
+        try {
+            List<Categoria> categorias = categoriaService.getAllCategorias();
+            return ResponseEntity.ok(categorias);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al obtener las categorías", e);
+        }
     }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public class CategoriaNotFoundException extends RuntimeException {
+        public CategoriaNotFoundException(String message) {
+            super(message);
+        }
+    }
+
+
 }
 

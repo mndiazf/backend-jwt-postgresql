@@ -19,7 +19,7 @@ public class Marca {
     private Long id;
 
     @NotNull
-    @Size(min = 1, max = 30)
+    @Size(min = 2, max = 30)
     @Column(nullable = false, length = 30)
     private String nombre;
 
