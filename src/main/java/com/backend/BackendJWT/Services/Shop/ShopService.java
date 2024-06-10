@@ -6,10 +6,13 @@ import com.backend.BackendJWT.Models.Shop.Producto;
 import com.backend.BackendJWT.Repositories.Shop.CategoriaRepository;
 import com.backend.BackendJWT.Repositories.Shop.MarcaRepository;
 import com.backend.BackendJWT.Repositories.Shop.ProductoRepository;
+import com.backend.BackendJWT.Services.BlobStorageService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +25,8 @@ public class ShopService {
     private CategoriaRepository categoriaRepository;
     @Autowired
     private MarcaRepository marcaRepository;
+    @Autowired
+    private BlobStorageService blobStorageService;
 
     @Transactional
     public Producto guardarProducto(Producto producto) {
@@ -56,12 +61,21 @@ public class ShopService {
 
 
     @Transactional
-    public Producto editarProducto(Long idProducto, Producto productoActualizado) {
-        // Buscar el producto existente por ID
+    public Producto editarProducto(Long idProducto, Producto productoActualizado, MultipartFile file) throws IOException {
         Optional<Producto> productoBD = productoRepository.findById(idProducto);
 
         if (productoBD.isPresent()) {
             Producto producto = productoBD.get();
+
+            // Eliminar la imagen anterior si existe
+            if (producto.getImgUrl() != null && !producto.getImgUrl().isEmpty()) {
+                String fileName = producto.getImgUrl().substring(producto.getImgUrl().lastIndexOf('/') + 1);
+                blobStorageService.deleteFile(fileName);
+            }
+
+            // Subir la nueva imagen
+            String newImageUrl = blobStorageService.uploadFile(file, file.getOriginalFilename());
+            producto.setImgUrl(newImageUrl);
 
             // Actualizar los campos del producto
             producto.setNombre(productoActualizado.getNombre());
@@ -69,7 +83,6 @@ public class ShopService {
             producto.setStock(productoActualizado.getStock());
             producto.setDescripcion(productoActualizado.getDescripcion());
             producto.setDescuento(productoActualizado.getDescuento());
-            producto.setImgUrl(productoActualizado.getImgUrl());
             producto.setPorcentajeDescuento(productoActualizado.getPorcentajeDescuento());
 
             // Convertir y establecer la marca y categoría

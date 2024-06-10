@@ -68,14 +68,40 @@ public class ShopController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<Producto> editarProducto(@PathVariable Long id, @RequestBody Producto productoActualizado) {
+    public ResponseEntity<Producto> editarProducto(@PathVariable Long id,
+                                                   @RequestParam("file") MultipartFile file,
+                                                   @RequestParam("nombre") String nombre,
+                                                   @RequestParam("precio") Double precio,
+                                                   @RequestParam("stock") Integer stock,
+                                                   @RequestParam("descripcion") String descripcion,
+                                                   @RequestParam("descuento") Boolean descuento,
+                                                   @RequestParam("porcentajeDescuento") Double porcentajeDescuento,
+                                                   @RequestParam("categoriaNombre") String categoriaNombre,
+                                                   @RequestParam("marcaNombre") String marcaNombre) {
         try {
-            Producto productoEditado = productoService.editarProducto(id, productoActualizado);
+            Producto productoActualizado = new Producto();
+            productoActualizado.setNombre(nombre);
+            productoActualizado.setPrecio(precio);
+            productoActualizado.setStock(stock);
+            productoActualizado.setDescripcion(descripcion);
+            productoActualizado.setDescuento(descuento);
+            productoActualizado.setPorcentajeDescuento(porcentajeDescuento);
+
+            Categoria categoria = new Categoria();
+            categoria.setNombre(categoriaNombre);
+            productoActualizado.setCategoria(categoria);
+
+            Marca marca = new Marca();
+            marca.setNombre(marcaNombre);
+            productoActualizado.setMarca(marca);
+
+            Producto productoEditado = productoService.editarProducto(id, productoActualizado, file);
             return new ResponseEntity<>(productoEditado, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @GetMapping("/all")
     public ResponseEntity<List<Producto>> obtenerTodosLosProductos() {
