@@ -67,15 +67,18 @@ public class ShopService {
         if (productoBD.isPresent()) {
             Producto producto = productoBD.get();
 
-            // Eliminar la imagen anterior si existe
-            if (producto.getImgUrl() != null && !producto.getImgUrl().isEmpty()) {
-                String fileName = producto.getImgUrl().substring(producto.getImgUrl().lastIndexOf('/') + 1);
-                blobStorageService.deleteFile(fileName);
-            }
+            // Subir la nueva imagen si se proporciona
+            if (file != null && !file.isEmpty()) {
+                // Eliminar la imagen anterior si existe
+                if (producto.getImgUrl() != null && !producto.getImgUrl().isEmpty()) {
+                    String fileName = producto.getImgUrl().substring(producto.getImgUrl().lastIndexOf('/') + 1);
+                    blobStorageService.deleteFile(fileName);
+                }
 
-            // Subir la nueva imagen
-            String newImageUrl = blobStorageService.uploadFile(file, file.getOriginalFilename());
-            producto.setImgUrl(newImageUrl);
+                // Subir la nueva imagen
+                String newImageUrl = blobStorageService.uploadFile(file, file.getOriginalFilename());
+                producto.setImgUrl(newImageUrl);
+            }
 
             // Actualizar los campos del producto
             producto.setNombre(productoActualizado.getNombre());
@@ -118,6 +121,7 @@ public class ShopService {
     }
 
 
+
     public List<Producto> obtenerTodosLosProductos() {
         return productoRepository.findAll();
     }
@@ -131,13 +135,30 @@ public class ShopService {
         }
     }
 
+    @Transactional
     public void borrarProductoPorId(Long idProducto) {
-        if (productoRepository.existsById(idProducto)) {
+        Optional<Producto> productoBD = productoRepository.findById(idProducto);
+
+        if (productoBD.isPresent()) {
+            Producto producto = productoBD.get();
+
+            // Eliminar la imagen del blob storage si existe
+            if (producto.getImgUrl() != null && !producto.getImgUrl().isEmpty()) {
+                String fileName = producto.getImgUrl().substring(producto.getImgUrl().lastIndexOf('/') + 1);
+                boolean deleted = blobStorageService.deleteFile(fileName);
+
+                if (!deleted) {
+                    System.out.println("Error al eliminar la imagen del blob storage.");
+                }
+            }
+
+            // Eliminar el producto de la base de datos
             productoRepository.deleteById(idProducto);
         } else {
             throw new IllegalArgumentException("No se encontró el producto con el ID: " + idProducto);
         }
     }
+
 
 
     public List<Marca> obtenerTodasLasMarcas() {

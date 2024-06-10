@@ -69,7 +69,7 @@ public class ShopController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Producto> editarProducto(@PathVariable Long id,
-                                                   @RequestParam("file") MultipartFile file,
+                                                   @RequestParam(value = "file", required = false) MultipartFile file,
                                                    @RequestParam("nombre") String nombre,
                                                    @RequestParam("precio") Double precio,
                                                    @RequestParam("stock") Integer stock,
@@ -103,6 +103,7 @@ public class ShopController {
     }
 
 
+
     @GetMapping("/all")
     public ResponseEntity<List<Producto>> obtenerTodosLosProductos() {
         try {
@@ -131,22 +132,6 @@ public class ShopController {
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> borrarProductoPorId(@PathVariable Long id) {
         try {
-            // Primero, obtén el producto para asegurarte de que existe y obtener la información del archivo
-            Producto producto = productoService.obtenerProductoPorId(id);
-            if (producto == null) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-
-            // Intenta eliminar el archivo de Blob Storage si existe una URL o nombre de archivo
-            if (producto.getImgUrl() != null && !producto.getImgUrl().isEmpty()) {
-                String fileName = extractFileName(producto.getImgUrl()); // Asumiendo que tienes una función para extraer el nombre de archivo
-                boolean deleted = blobStorageService.deleteFile(fileName);
-                if (!deleted) {
-                    return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-                }
-            }
-
-            // Finalmente, elimina el producto
             productoService.borrarProductoPorId(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (IllegalArgumentException e) {
