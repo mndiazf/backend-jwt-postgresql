@@ -50,6 +50,11 @@ public class User implements UserDetails {
     private String email;
 
     @NotNull
+    @Size(min = 1, max = 255)
+    @Column(nullable = false, length = 255)
+    private String imgUrl;
+
+    @NotNull
     @Size(min = 8, max = 12)
     @Column(nullable = false)
     private String password;

@@ -23,75 +23,103 @@ public class AuthService {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final BlobStorageService blobStorageService;
 
     @Autowired
     private RoleRepository roleRepository;
 
     public AuthResponse login(LoginRequest request) {
         try {
-            // Intenta autenticar al usuario
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-
-            // Busca el usuario en el repositorio
             UserDetails user = userRepository.findByUsername(request.getUsername()).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
-
-            // Genera el token JWT para el usuario
             String token = jwtService.getToken(user);
-
-            // Retorna la respuesta con el token
-            return AuthResponse.builder()
-                    .token(token)
-                    .build();
+            return AuthResponse.builder().token(token).build();
         } catch (AuthenticationException e) {
-            // Manejo de errores de autenticación
             throw new RuntimeException("Error de autenticación: " + e.getMessage());
         } catch (Exception e) {
-            // Manejo de otros errores inesperados
             throw new RuntimeException("Error interno del servidor: " + e.getMessage());
         }
     }
 
+
+
     public AuthResponse register(RegisterRequest request) {
-        if (userRepository.existsByUsername(request.getUsername())) {
-            throw new UsernameAlreadyExistsException("Username '" + request.getUsername() + "' is already registered");
+        try {
+            if (userRepository.existsByUsername(request.getUsername())) {
+                throw new UsernameAlreadyExistsException("Username '" + request.getUsername() + "' is already registered");
+            }
+            if (userRepository.existsByEmail(request.getEmail())) {
+                throw new EmailAlreadyExistsException("Email '" + request.getEmail() + "' is already associated with an account");
+            }
+            Role defaultRole = roleRepository.findByRoleName(ERole.USER).orElseThrow(() -> new RuntimeException("Default role not found"));
+
+            String imageUrl = null;
+            if (request.getFile() != null && !request.getFile().isEmpty()) {
+                imageUrl = blobStorageService.uploadFile(request.getFile(), request.getFile().getOriginalFilename());
+            }
+
+            User user = User.builder()
+                    .username(request.getUsername())
+                    .password(passwordEncoder.encode(request.getPassword()))
+                    .firstname(request.getFirstname())
+                    .lastname(request.getLastname())
+                    .email(request.getEmail())
+                    .imgUrl(imageUrl)
+                    .phoneNumber(request.getPhoneNumber())
+                    .phoneNumber2(request.getPhoneNumber2())
+                    .role(defaultRole)
+                    .build();
+            userRepository.save(user);
+            return AuthResponse.builder().token(jwtService.getToken(user)).build();
+        } catch (UsernameAlreadyExistsException | EmailAlreadyExistsException e) {
+            throw new RuntimeException(e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException("Error interno del servidor: " + e.getMessage());
         }
-
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new EmailAlreadyExistsException("Email '" + request.getEmail() + "' is already associated with an account");
-        }
-
-        // Fetch the default role
-        Role defaultRole = roleRepository.findByRoleName(ERole.USER)
-                .orElseThrow(() -> new RuntimeException("Default role not found"));
-
-        User user = User.builder()
-                .username(request.getUsername())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .firstname(request.getFirstname())
-                .lastname(request.getLastname())
-                .email(request.getEmail())
-                .phoneNumber(request.getPhoneNumber())
-                .phoneNumber2(request.getPhoneNumber2())  // Assuming phoneNumber2 can be directly passed.
-                .role(defaultRole)  // Set the fetched role
-                .build();
-
-        userRepository.save(user);  // Persist the new user with the role in the database.
-
-        // Generate token and return response
-        return AuthResponse.builder()
-                .token(jwtService.getToken(user))
-                .build();
     }
+
+    public void updateUserDetails(RegisterRequest request) {
+        try {
+            User user = userRepository.findByUsername(request.getUsername()).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+
+            if (request.getFile() != null && !request.getFile().isEmpty()) {
+                // Eliminar la imagen anterior si existe
+                if (user.getImgUrl() != null && !user.getImgUrl().isEmpty()) {
+                    String fileName = user.getImgUrl().substring(user.getImgUrl().lastIndexOf('/') + 1);
+                    blobStorageService.deleteFile(fileName);
+                }
+
+                // Subir la nueva imagen
+                String newImageUrl = blobStorageService.uploadFile(request.getFile(), request.getFile().getOriginalFilename());
+                user.setImgUrl(newImageUrl);
+            }
+
+            user.setFirstname(request.getFirstname());
+            user.setLastname(request.getLastname());
+            user.setEmail(request.getEmail());
+            user.setPhoneNumber(request.getPhoneNumber());
+            user.setPhoneNumber2(request.getPhoneNumber2());
+            userRepository.save(user);
+        } catch (UsernameNotFoundException e) {
+            throw new RuntimeException("Usuario no encontrado: " + e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException("Error interno del servidor: " + e.getMessage());
+        }
+    }
+
 
     // Método para actualizar la contraseña del usuario
     public void updatePassword(RecoverPassword request) {
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario con el email '" + request.getEmail() + "' no encontrado"));
-
-        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
-        userRepository.save(user);
+        try {
+            User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new UsernameNotFoundException("Usuario con el email '" + request.getEmail() + "' no encontrado"));
+            user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+            userRepository.save(user);
+        } catch (UsernameNotFoundException e) {
+            throw new RuntimeException("Usuario no encontrado: " + e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException("Error interno del servidor: " + e.getMessage());
+        }
     }
-
 
     // Custom exception classes (create separate files for these)
     public class UsernameAlreadyExistsException extends RuntimeException {

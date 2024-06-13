@@ -141,10 +141,7 @@ public class ShopController {
         }
     }
 
-    private String extractFileName(String blobUrl) {
-        // Implementa lógica para extraer el nombre del archivo del URL, si es necesario
-        return blobUrl.substring(blobUrl.lastIndexOf('/') + 1);
-    }
+
 
 
     @GetMapping("/allmarcas")
