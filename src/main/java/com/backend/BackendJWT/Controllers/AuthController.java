@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,13 +47,12 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestPart("file") MultipartFile file,
+    public ResponseEntity<?> register(@RequestPart(value = "file", required = false) MultipartFile file,
                                       @RequestPart("username") String username,
                                       @RequestPart("password") String password,
                                       @RequestPart("firstname") String firstname,
                                       @RequestPart("lastname") String lastname,
                                       @RequestPart("email") String email,
-                                      @RequestPart("imgUrl") String imgUrl,
                                       @RequestPart("phoneNumber") String phoneNumber,
                                       @RequestPart("phoneNumber2") String phoneNumber2) {
         try {
@@ -62,7 +62,6 @@ public class AuthController {
             request.setFirstname(firstname);
             request.setLastname(lastname);
             request.setEmail(email);
-            request.setImgUrl(imgUrl);
             request.setPhoneNumber(phoneNumber);
             request.setPhoneNumber2(phoneNumber2);
             request.setFile(file);
@@ -76,13 +75,13 @@ public class AuthController {
         }
     }
 
+
     @PutMapping("/update-user")
-    public ResponseEntity<?> updateUserDetails(@RequestPart("file") MultipartFile file,
+    public ResponseEntity<?> updateUserDetails(@RequestPart(value = "file", required = false) MultipartFile file,
                                                @RequestPart("username") String username,
                                                @RequestPart("firstname") String firstname,
                                                @RequestPart("lastname") String lastname,
                                                @RequestPart("email") String email,
-                                               @RequestPart("imgUrl") String imgUrl,
                                                @RequestPart("phoneNumber") String phoneNumber,
                                                @RequestPart("phoneNumber2") String phoneNumber2) {
         try {
@@ -91,7 +90,6 @@ public class AuthController {
             request.setFirstname(firstname);
             request.setLastname(lastname);
             request.setEmail(email);
-            request.setImgUrl(imgUrl);
             request.setPhoneNumber(phoneNumber);
             request.setPhoneNumber2(phoneNumber2);
             request.setFile(file);
@@ -104,6 +102,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }
     }
+
 
     @PostMapping("/update-password")
     public ResponseEntity<?> updatePassword(@RequestBody RecoverPassword request) {
@@ -193,6 +192,18 @@ public class AuthController {
             return new ResponseEntity<>(comunaDTOs, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+        try {
+            UserDTO user = authService.getUserById(id);
+            return ResponseEntity.ok(user);
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }
     }
 }

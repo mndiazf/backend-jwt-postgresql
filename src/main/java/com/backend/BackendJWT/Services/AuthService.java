@@ -2,10 +2,7 @@ package com.backend.BackendJWT.Services;
 
 import com.backend.BackendJWT.Models.Auth.*;
 import com.backend.BackendJWT.Config.Jwt.JwtService;
-import com.backend.BackendJWT.Models.Auth.DTO.AuthResponse;
-import com.backend.BackendJWT.Models.Auth.DTO.LoginRequest;
-import com.backend.BackendJWT.Models.Auth.DTO.RecoverPassword;
-import com.backend.BackendJWT.Models.Auth.DTO.RegisterRequest;
+import com.backend.BackendJWT.Models.Auth.DTO.*;
 import com.backend.BackendJWT.Repositories.Auth.RoleRepository;
 import com.backend.BackendJWT.Repositories.Auth.UserRepository;
 
@@ -29,6 +26,8 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final BlobStorageService blobStorageService;
 
+    private static final String DEFAULT_IMAGE_URL = "https://mousecat1.blob.core.windows.net/mousecat/cat-illustration-free-vector.jpg";
+
     @Autowired
     private RoleRepository roleRepository;
 
@@ -46,7 +45,6 @@ public class AuthService {
     }
 
 
-
     public AuthResponse register(RegisterRequest request) {
         try {
             if (userRepository.existsByUsername(request.getUsername())) {
@@ -57,7 +55,7 @@ public class AuthService {
             }
             Role defaultRole = roleRepository.findByRoleName(ERole.USER).orElseThrow(() -> new RuntimeException("Default role not found"));
 
-            String imageUrl = null;
+            String imageUrl = DEFAULT_IMAGE_URL; // Set default image URL
             if (request.getFile() != null && !request.getFile().isEmpty()) {
                 imageUrl = blobStorageService.uploadFile(request.getFile(), request.getFile().getOriginalFilename());
             }
@@ -81,6 +79,7 @@ public class AuthService {
             throw new RuntimeException("Error interno del servidor: " + e.getMessage());
         }
     }
+
 
     public void updateUserDetails(RegisterRequest request) {
         try {
@@ -137,4 +136,24 @@ public class AuthService {
             super(message);
         }
     }
+
+    public UserDTO getUserById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+        return mapToUserDTO(user);
+    }
+
+    private UserDTO mapToUserDTO(User user) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId());
+        userDTO.setUsername(user.getUsername());
+        userDTO.setFirstname(user.getFirstname());
+        userDTO.setLastname(user.getLastname());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setImgUrl(user.getImgUrl());
+        userDTO.setPhoneNumber(user.getPhoneNumber());
+        userDTO.setPhoneNumber2(user.getPhoneNumber2());
+        userDTO.setRole(String.valueOf(user.getRole().getRoleName()));
+        return userDTO;
+    }
 }
+
