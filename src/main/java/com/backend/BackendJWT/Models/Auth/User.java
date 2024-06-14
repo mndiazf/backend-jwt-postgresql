@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+
 
 
 @Builder
@@ -63,33 +63,40 @@ public class User implements UserDetails {
     @Size(min = 12, max = 12)
     @Column(nullable = false, length = 12)
     private String phoneNumber;
+
     @Size(min = 12, max = 12)
     @Column(length = 12)
     private String phoneNumber2;
 
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "role_id")
     @NotNull
-    private Role role;  // Ensure there is no @Enumerated here as Role is an entity
+    private Role role;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "address_id")
+    private Address address;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority(role.getRoleName().name()));
     }
+
     @Override
     public boolean isAccountNonExpired() {
-       return true;
+        return true;
     }
+
     @Override
     public boolean isAccountNonLocked() {
-       return true;
+        return true;
     }
+
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
+
     @Override
     public boolean isEnabled() {
         return true;
