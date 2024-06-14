@@ -1,4 +1,4 @@
-package com.backend.BackendJWT.Models.Auth;
+package com.backend.BackendJWT.Models.Auth.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthResponse {
-    String token; 
+public class RecoverPassword {
+        private String email;
+        private String newPassword;
 }

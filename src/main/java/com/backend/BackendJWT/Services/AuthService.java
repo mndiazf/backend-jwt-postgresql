@@ -2,6 +2,10 @@ package com.backend.BackendJWT.Services;
 
 import com.backend.BackendJWT.Models.Auth.*;
 import com.backend.BackendJWT.Config.Jwt.JwtService;
+import com.backend.BackendJWT.Models.Auth.DTO.AuthResponse;
+import com.backend.BackendJWT.Models.Auth.DTO.LoginRequest;
+import com.backend.BackendJWT.Models.Auth.DTO.RecoverPassword;
+import com.backend.BackendJWT.Models.Auth.DTO.RegisterRequest;
 import com.backend.BackendJWT.Repositories.Auth.RoleRepository;
 import com.backend.BackendJWT.Repositories.Auth.UserRepository;
 

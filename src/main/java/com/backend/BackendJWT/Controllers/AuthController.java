@@ -1,9 +1,7 @@
 package com.backend.BackendJWT.Controllers;
 
 import com.backend.BackendJWT.Models.Auth.*;
-import com.backend.BackendJWT.Models.Auth.DTO.AddressDTO;
-import com.backend.BackendJWT.Models.Auth.DTO.ComunaDTO;
-import com.backend.BackendJWT.Models.Auth.DTO.RegionDTO;
+import com.backend.BackendJWT.Models.Auth.DTO.*;
 import com.backend.BackendJWT.Services.AddressService;
 import com.backend.BackendJWT.Services.AuthService;
 import com.backend.BackendJWT.Services.RegionService;
