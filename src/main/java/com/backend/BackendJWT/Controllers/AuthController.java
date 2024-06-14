@@ -32,8 +32,6 @@ public class AuthController {
     private RegionService regionService;
 
 
-
-
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         try {
@@ -68,6 +66,8 @@ public class AuthController {
 
             AuthResponse response = authService.register(request);
             return ResponseEntity.ok(response);
+        } catch (AuthService.UsernameAlreadyExistsException | AuthService.EmailAlreadyExistsException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
@@ -76,20 +76,31 @@ public class AuthController {
     }
 
 
-    @PutMapping("/update-user")
-    public ResponseEntity<?> updateUserDetails(@RequestPart(value = "file", required = false) MultipartFile file,
-                                               @RequestPart("username") String username,
+    @GetMapping("/user/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+        try {
+            GetUserDTO user = authService.getUserById(id);
+            return ResponseEntity.ok(user);
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
+        }
+    }
+
+
+    @PutMapping("/update-user/{id}")
+    public ResponseEntity<?> updateUserDetails(@PathVariable Long id,
+                                               @RequestPart(value = "file", required = false) MultipartFile file,
                                                @RequestPart("firstname") String firstname,
                                                @RequestPart("lastname") String lastname,
-                                               @RequestPart("email") String email,
                                                @RequestPart("phoneNumber") String phoneNumber,
                                                @RequestPart("phoneNumber2") String phoneNumber2) {
         try {
-            RegisterRequest request = new RegisterRequest();
-            request.setUsername(username);
+            UserUpdateRequestDTO request = new UserUpdateRequestDTO();
+            request.setId(id); // Agregamos el ID al request
             request.setFirstname(firstname);
             request.setLastname(lastname);
-            request.setEmail(email);
             request.setPhoneNumber(phoneNumber);
             request.setPhoneNumber2(phoneNumber2);
             request.setFile(file);
@@ -195,15 +206,4 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/user/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable Long id) {
-        try {
-            UserDTO user = authService.getUserById(id);
-            return ResponseEntity.ok(user);
-        } catch (UsernameNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
-        }
-    }
 }

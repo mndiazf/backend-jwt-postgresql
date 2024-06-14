@@ -44,7 +44,6 @@ public class AuthService {
         }
     }
 
-
     public AuthResponse register(RegisterRequest request) {
         try {
             if (userRepository.existsByUsername(request.getUsername())) {
@@ -53,7 +52,9 @@ public class AuthService {
             if (userRepository.existsByEmail(request.getEmail())) {
                 throw new EmailAlreadyExistsException("Email '" + request.getEmail() + "' is already associated with an account");
             }
-            Role defaultRole = roleRepository.findByRoleName(ERole.USER).orElseThrow(() -> new RuntimeException("Default role not found"));
+
+            Role defaultRole = roleRepository.findByRoleName(ERole.USER)
+                    .orElseThrow(() -> new RuntimeException("Default role not found"));
 
             String imageUrl = DEFAULT_IMAGE_URL; // Set default image URL
             if (request.getFile() != null && !request.getFile().isEmpty()) {
@@ -72,6 +73,7 @@ public class AuthService {
                     .role(defaultRole)
                     .build();
             userRepository.save(user);
+
             return AuthResponse.builder().token(jwtService.getToken(user)).build();
         } catch (UsernameAlreadyExistsException | EmailAlreadyExistsException e) {
             throw new RuntimeException(e.getMessage());
@@ -81,9 +83,10 @@ public class AuthService {
     }
 
 
-    public void updateUserDetails(RegisterRequest request) {
+    public void updateUserDetails(UserUpdateRequestDTO request) {
         try {
-            User user = userRepository.findByUsername(request.getUsername()).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+            User user = userRepository.findById(request.getId())
+                    .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
             if (request.getFile() != null && !request.getFile().isEmpty()) {
                 // Eliminar la imagen anterior si existe
@@ -99,7 +102,6 @@ public class AuthService {
 
             user.setFirstname(request.getFirstname());
             user.setLastname(request.getLastname());
-            user.setEmail(request.getEmail());
             user.setPhoneNumber(request.getPhoneNumber());
             user.setPhoneNumber2(request.getPhoneNumber2());
             userRepository.save(user);
@@ -109,6 +111,7 @@ public class AuthService {
             throw new RuntimeException("Error interno del servidor: " + e.getMessage());
         }
     }
+
 
 
     // Método para actualizar la contraseña del usuario
@@ -124,6 +127,23 @@ public class AuthService {
         }
     }
 
+    public GetUserDTO getUserById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+        return mapToUserDTO(user);
+    }
+
+    private GetUserDTO mapToUserDTO(User user) {
+        GetUserDTO getUserDTO = new GetUserDTO();
+        getUserDTO.setUsername(user.getUsername());
+        getUserDTO.setFirstname(user.getFirstname());
+        getUserDTO.setLastname(user.getLastname());
+        getUserDTO.setEmail(user.getEmail());
+        getUserDTO.setImgUrl(user.getImgUrl());
+        getUserDTO.setPhoneNumber(user.getPhoneNumber());
+        getUserDTO.setPhoneNumber2(user.getPhoneNumber2());
+        return getUserDTO;
+    }
+
     // Custom exception classes (create separate files for these)
     public class UsernameAlreadyExistsException extends RuntimeException {
         public UsernameAlreadyExistsException(String message) {
@@ -137,23 +157,7 @@ public class AuthService {
         }
     }
 
-    public UserDTO getUserById(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
-        return mapToUserDTO(user);
-    }
 
-    private UserDTO mapToUserDTO(User user) {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(user.getId());
-        userDTO.setUsername(user.getUsername());
-        userDTO.setFirstname(user.getFirstname());
-        userDTO.setLastname(user.getLastname());
-        userDTO.setEmail(user.getEmail());
-        userDTO.setImgUrl(user.getImgUrl());
-        userDTO.setPhoneNumber(user.getPhoneNumber());
-        userDTO.setPhoneNumber2(user.getPhoneNumber2());
-        userDTO.setRole(String.valueOf(user.getRole().getRoleName()));
-        return userDTO;
-    }
+
 }
 
