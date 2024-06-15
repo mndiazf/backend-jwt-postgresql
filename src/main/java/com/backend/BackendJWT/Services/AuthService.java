@@ -99,7 +99,6 @@ public class AuthService {
                 String newImageUrl = blobStorageService.uploadFile(request.getFile(), request.getFile().getOriginalFilename());
                 user.setImgUrl(newImageUrl);
             }
-
             user.setFirstname(request.getFirstname());
             user.setLastname(request.getLastname());
             user.setPhoneNumber(request.getPhoneNumber());
