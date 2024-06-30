@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .cors(cors -> cors
                         .configurationSource(request -> {
                             var corsConfig = new org.springframework.web.cors.CorsConfiguration();
-                            corsConfig.setAllowedOrigins(List.of("https://gentle-dune-082b8f81e.5.azurestaticapps.net")); // Cambia esto por tus dominios permitidos
+                            corsConfig.setAllowedOrigins(List.of("https://9563-4-236-187-166.ngrok-free.app")); // Cambia esto por tus dominios permitidos
                             corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                             corsConfig.setAllowedHeaders(List.of("Authorization", "Content-Type"));
                             return corsConfig;
