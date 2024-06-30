@@ -39,6 +39,7 @@ public class Address {
     @NotNull
     private Comuna comuna;
 
-    @OneToOne(mappedBy = "address")
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 }

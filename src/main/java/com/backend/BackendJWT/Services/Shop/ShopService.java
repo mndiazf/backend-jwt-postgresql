@@ -123,8 +123,9 @@ public class ShopService {
 
 
     public List<Producto> obtenerTodosLosProductos() {
-        return productoRepository.findAll();
+        return productoRepository.findAllProductosOrdered();
     }
+
 
     public Producto obtenerProductoPorId(Long idProducto) {
         Optional<Producto> productoBD = productoRepository.findById(idProducto);

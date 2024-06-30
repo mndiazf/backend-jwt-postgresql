@@ -1,14 +1,9 @@
 package com.backend.BackendJWT.Services;
 
-import com.backend.BackendJWT.Models.Auth.DTO.OrderItemDTO;
-import com.backend.BackendJWT.Models.Auth.OrderItem;
-import com.backend.BackendJWT.Models.Shop.Producto;
 import com.backend.BackendJWT.Repositories.Auth.OrderItemRepository;
-import com.backend.BackendJWT.Repositories.Shop.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class OrderItemService {

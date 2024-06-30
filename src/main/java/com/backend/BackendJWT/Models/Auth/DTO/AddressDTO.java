@@ -5,19 +5,25 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class AddressDTO {
-    private Long id;
-    private String street;
-    private String number;
-    private String apartmentNumber;
-    private Long comunaId;
-    private String comunaName;
-    private Long userId;
-    private String userName;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-    // Getters and Setters
+@Data
+public class AddressDTO {
+    @NotNull
+    @Size(min = 1, max = 255)
+    private String street;
+
+    @NotNull
+    @Size(min = 1, max = 10)
+    private String number;
+
+    @Size(min = 1, max = 10)
+    private String apartmentNumber;
+
+    @NotNull
+    private Long comunaId;
+
+    @NotNull
+    private Long userId;
 }

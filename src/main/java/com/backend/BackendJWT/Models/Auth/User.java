@@ -73,8 +73,7 @@ public class User implements UserDetails {
     @NotNull
     private Role role;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "address_id")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Address address;
 
     @Override

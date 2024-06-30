@@ -10,10 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -128,39 +130,34 @@ public class AuthController {
     }
 
 
-    @PostMapping("/address/save")
-    public ResponseEntity<Object> guardarDireccion(@RequestBody AddressDTO addressDTO) {
+    @PostMapping("address/add")
+    public ResponseEntity<AddressResponseDTO> addAddress(@Validated @RequestBody AddressDTO addressDTO) {
         try {
-            AddressDTO addressGuardada = addressService.guardarDireccion(addressDTO);
-            return new ResponseEntity<>(addressGuardada, HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            return new ResponseEntity<>("An unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
+            AddressResponseDTO addressResponseDTO = addressService.saveAddress(addressDTO);
+            return ResponseEntity.ok(addressResponseDTO);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(null);
         }
     }
 
-    // Actualizar una dirección existente
-    @PutMapping("/address/{id}")
-    public ResponseEntity<AddressDTO> editarDireccion(@PathVariable Long id, @RequestBody AddressDTO addressDTO) {
+    @PutMapping("address/user/{userId}")
+    public ResponseEntity<?> updateAddress(@PathVariable Long userId, @Validated @RequestBody AddressDTO addressDTO) {
         try {
-            AddressDTO addressActualizada = addressService.editarDireccion(id, addressDTO);
-            return new ResponseEntity<>(addressActualizada, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            AddressResponseDTO addressResponseDTO = addressService.updateAddress(userId, addressDTO);
+            return ResponseEntity.ok(addressResponseDTO);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(new AddressNotFoundResponseDTO(false, e.getMessage()));
         }
     }
 
-    // Obtener una dirección por ID de usuario
-    @GetMapping("/address/user/{userId}")
-    public ResponseEntity<AddressDTO> obtenerDireccionPorUsuarioId(@PathVariable Long userId) {
-        try {
-            AddressDTO address = addressService.obtenerDireccionPorUsuarioId(userId);
-            return new ResponseEntity<>(address, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    @GetMapping("address/user/{userId}")
+    public ResponseEntity<?> getAddressByUserId(@PathVariable Long userId) {
+        Optional<AddressResponseDTO> addressResponse = addressService.getAddressByUserId(userId);
+        if (addressResponse.isPresent()) {
+            return ResponseEntity.ok(addressResponse.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new AddressNotFoundResponseDTO(false, "User address not found"));
         }
     }
 
