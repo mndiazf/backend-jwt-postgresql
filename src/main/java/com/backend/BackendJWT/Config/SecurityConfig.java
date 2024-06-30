@@ -12,6 +12,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.List;
+
 @Configuration
 @EnableWebSecurity(debug = true)
 @RequiredArgsConstructor
@@ -21,11 +23,20 @@ public class SecurityConfig {
     private final AuthenticationProvider authProvider;
 
 
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
+        http
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors
+                        .configurationSource(request -> {
+                            var corsConfig = new org.springframework.web.cors.CorsConfiguration();
+                            corsConfig.setAllowedOrigins(List.of("https://gentle-dune-082b8f81e.5.azurestaticapps.net")); // Cambia esto por tus dominios permitidos
+                            corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                            corsConfig.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+                            return corsConfig;
+                        })
+                )
                 .authorizeHttpRequests(authRequest ->
                         authRequest
                                 .requestMatchers("/auth/**").permitAll()
@@ -37,13 +48,19 @@ public class SecurityConfig {
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManager ->
-                        sessionManager
-                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
                 .authenticationProvider(authProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
-
-
+                .headers(headers -> headers
+                        .contentSecurityPolicy(csp -> csp.policyDirectives("script-src 'self'; object-src 'none'; base-uri 'self';"))
+                        .frameOptions(frameOptions -> frameOptions.disable())  // No estático
+                        .xssProtection(xss -> xss.disable())  // Deshabilitar protección XSS, si es necesario
+                        .httpStrictTransportSecurity(hsts -> hsts
+                                .maxAgeInSeconds(31536000)  // 1 año
+                                .includeSubDomains(true)
+                        )
+                );
+        return http.build();
     }
 }
-
