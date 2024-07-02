@@ -22,7 +22,7 @@ jobs:
         run: chmod +x mvnw
 
       - name: Build with Maven
-        run: ./mvnw mvnw spring-boot:run
+        run: ./mvnw spring-boot:run
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
