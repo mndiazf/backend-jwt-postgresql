@@ -23,29 +23,28 @@ jobs:
         run: chmod +x mvnw
 
       - name: Build with Maven
-        run: ./mvnw springboot:run
+        run: ./mvnw clean package
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: java-app
-          path: '${{ github.workspace }}/target/*.jar'
+          path: target/*.jar
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
     environment:
       name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
       id-token: write # This is required for requesting the JWT
-  
+
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
           name: java-app
-      
+
       - name: Login to Azure
         uses: azure/login@v1
         with:
@@ -59,4 +58,4 @@ jobs:
         with:
           app-name: 'mousecat-api'
           slot-name: 'Production'
-          package: '*.jar'
+          package: 'target/*.jar'
