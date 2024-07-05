@@ -33,6 +33,7 @@ public class SecurityConfig {
                         authRequest
                                 .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/shop/**").permitAll()
+                                .requestMatchers("/shop/productos/save").permitAll() // Permitir acceso al endpoint específico
                                 .requestMatchers("/api/categorias/**").permitAll()
                                 .requestMatchers("/api/marcas/**").permitAll()
                                 .requestMatchers("/email/send").permitAll()
