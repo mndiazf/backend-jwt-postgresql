@@ -33,6 +33,8 @@ public class SecurityConfig {
                         authRequest
                                 .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/shop/**").permitAll()
+                                .requestMatchers("/productos/**").permitAll()
+                                .requestMatchers("/save").permitAll()
                                 .requestMatchers("/api/categorias/**").permitAll()
                                 .requestMatchers("/api/marcas/**").permitAll()
                                 .requestMatchers("/email/send").permitAll()
