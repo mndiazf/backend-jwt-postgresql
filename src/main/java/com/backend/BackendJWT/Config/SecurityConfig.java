@@ -14,6 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity(debug = true)
@@ -30,15 +31,15 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration configuration = new CorsConfiguration();
-                    configuration.setAllowedOrigins(Arrays.asList("*"));
-                    configuration.setAllowedMethods(Arrays.asList("*"));
-                    configuration.setAllowedHeaders(Arrays.asList("*"));
+                    configuration.setAllowedOrigins(List.of("*"));
+                    configuration.setAllowedMethods(List.of("*"));
+                    configuration.setAllowedHeaders(List.of("*"));
                     return configuration;
                 }))
                 .authorizeHttpRequests(authRequest ->
                         authRequest
                                 .requestMatchers("/auth/**").permitAll()
-                                .requestMatchers("/shop/**").permitAll()
+                                .requestMatchers("/shop/productos/**").permitAll()
                                 .requestMatchers("/api/categorias/**").permitAll()
                                 .requestMatchers("/api/marcas/**").permitAll()
                                 .requestMatchers("/email/send").permitAll()
