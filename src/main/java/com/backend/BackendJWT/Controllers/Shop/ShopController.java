@@ -27,7 +27,7 @@ public class ShopController {
 
 
     // Crear un nuevo producto
-    @PostMapping("/save")
+    @PostMapping("/productos/save")
     public ResponseEntity<Producto> guardarProducto(@RequestParam("file") MultipartFile file,
                                                     @RequestParam("nombre") String nombre,
                                                     @RequestParam("precio") Double precio,
@@ -67,7 +67,7 @@ public class ShopController {
     }
 
 
-    @PutMapping("/{id}")
+    @PutMapping("/productos/{id}")
     public ResponseEntity<Producto> editarProducto(@PathVariable Long id,
                                                    @RequestParam(value = "file", required = false) MultipartFile file,
                                                    @RequestParam("nombre") String nombre,
@@ -104,7 +104,7 @@ public class ShopController {
 
 
 
-    @GetMapping("/all")
+    @GetMapping("/productos/all")
     public ResponseEntity<List<Producto>> obtenerTodosLosProductos() {
         try {
             List<Producto> productos = productoService.obtenerTodosLosProductos();
@@ -117,7 +117,7 @@ public class ShopController {
         }
     }
 
-    @GetMapping("/find/{id}")
+    @GetMapping("/productos/find/{id}")
     public ResponseEntity<Producto> obtenerProductoPorId(@PathVariable Long id) {
         try {
             Producto producto = productoService.obtenerProductoPorId(id);
@@ -129,7 +129,7 @@ public class ShopController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/productos/{id}")
     public ResponseEntity<HttpStatus> borrarProductoPorId(@PathVariable Long id) {
         try {
             productoService.borrarProductoPorId(id);
@@ -144,7 +144,7 @@ public class ShopController {
 
 
 
-    @GetMapping("/allmarcas")
+    @GetMapping("/productos/allmarcas")
     public ResponseEntity<List<Marca>> obtenerTodasLasMarcas() {
         try {
             List<Marca> marcas = productoService.obtenerTodasLasMarcas();
@@ -157,7 +157,7 @@ public class ShopController {
         }
     }
 
-    @GetMapping("/allcategorias")
+    @GetMapping("/productos/allcategorias")
     public ResponseEntity<List<Categoria>> obtenerTodasLasCategorias() {
         try {
             List<Categoria> categorias = productoService.obtenerTodasLasCategorias();
