@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "https://mousecat.lol", allowedHeaders = "*")
 @RequestMapping("/shop/productos")
 public class ShopController {
 
