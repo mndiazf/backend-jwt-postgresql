@@ -65,7 +65,7 @@ public class CategoriaController {
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public class CategoriaNotFoundException extends RuntimeException {
+    public static class CategoriaNotFoundException extends RuntimeException {
         public CategoriaNotFoundException(String message) {
             super(message);
         }
