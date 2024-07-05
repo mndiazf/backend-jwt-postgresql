@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "https://mousecat.lol", allowedHeaders = "*")
-@RequestMapping("/shop/productos")
+@RequestMapping("/shop")
 public class ShopController {
 
     @Autowired
