@@ -44,6 +44,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/marcas/**").permitAll()
                                 .requestMatchers("/email/send").permitAll()
                                 .requestMatchers("/orders/**").permitAll()
+                                .requestMatchers("/save").permitAll() // Asegúrate de incluir esta línea
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManager ->
